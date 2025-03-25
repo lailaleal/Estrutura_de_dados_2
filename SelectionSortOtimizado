@@ -1,64 +1,84 @@
-import random  # Importa o módulo random para gerar números aleatórios
+#import random  # Importa o módulo random para gerar números aleatórios
 import time    # Importa o módulo time para medir o tempo de execução
 
-def gera_array(n):  # Função para gerar um array aleatório
+#def gera_array(n):  # Função para gerar um array aleatório
     # Retorna uma lista com n elementos aleatórios entre 0 e 1000
-    return [random.randint(0, 1000) for _ in range(n)]
+    #return [random.randint(0, 1000) for _ in range(n)]
 
 def selection_sort_otimizado(array):  # Função do Selection Sort otimizado
     n = len(array)  # Obtém o tamanho do array
-    
+    print("\n=== SELECTION SORT OTIMIZADO ===")
     # Mostra apenas os 10 primeiros elementos para não poluir a saída com arrays grandes
-    print("Array original:", array[:10], "...")  
+    print("Array original:", array)  
     
     # Loop principal: vai da primeira até a penúltima posição (otimização 1)
-    for i in range(n - 1):  
+    for i in range(n // 2):  # Percorre apenas a metade do array
         menor = i  # Assume que o menor elemento está na posição atual
         maior = n - 1 - i  # Assume que o maior está no final do segmento não ordenado
         
-        # Verifica se o suposto menor é maior que o suposto maior (otimização 2)
-        if array[menor] > array[maior]:  
-            # Se for, já faz a troca entre eles
-            array[menor], array[maior] = array[maior], array[menor]  
-            
-        # Percorre o segmento não ordenado para encontrar o verdadeiro menor e maior
+        # Busca simultânea pelo menor e maior
         for j in range(i + 1, n - i):
-            if array[j] < array[menor]:  # Se encontrar um elemento menor
-                menor = j  # Atualiza a posição do menor
-            elif array[j] > array[maior]:  # Se encontrar um elemento maior
-                maior = j  # Atualiza a posição do maior
+            if array[j] < array[menor]:
+                menor = j
+            elif array[j] > array[maior]:
+                maior = j
         
-        # Coloca o menor elemento no início do segmento não ordenado
-        array[i], array[menor] = array[menor], array[i]  
+        # Coloca o menor no início
+        array[i], array[menor] = array[menor], array[i]
         
-        # Evita trocar o mesmo elemento duas vezes (otimização 3)
-        if menor == n - 1 - i:  
-            # Caso especial: se o menor estava na posição do maior
-            array[n - 1 - i], array[maior] = array[maior], array[n - 1 - i]  
-        else:
-            # Coloca o maior elemento no final do segmento não ordenado
-            array[n - 1 - i], array[maior] = array[maior], array[n - 1 - i]  
+        # Caso especial se o maior estava na posição do menor
+        if maior == i:
+            maior = menor
         
-        # Mostra progresso a cada 1000 iterações para arrays muito grandes
-        if i % 1000 == 0:  
-            print(f"Iteração {i}: Progresso...")
+        # Coloca o maior no final
+        array[n - 1 - i], array[maior] = array[maior], array[n - 1 - i]
+        
+        print(f"Iteração {i + 1}: {array}")  # Mostra progresso
     
-    # Mostra apenas os 10 primeiros elementos do array ordenado
-    print("Array ordenado:", array[:10], "...")  
-    return array  # Retorna o array ordenado
+    print("\nArray ordenado:", array)  # Resultado final
+    return array
 
-def main():  # Função principal do programa
-    inicio = time.time()  # Marca o tempo de início da execução
+def main():
+   
+    print("=== SELECTION SORT OTIMIZADO ===")
     
-    n = 10000  # Tamanho do array a ser gerado e ordenado
-    arr = gera_array(n)  # Gera um array aleatório
+    # Entrada do número de elementos
+    while True:
+        try:
+            n = int(input("\nDigite o número de elementos: "))
+            if n <= 0:
+                print("Por favor, digite um número positivo!")
+                continue
+            break
+        except ValueError:
+            print("Entrada inválida! Digite um número inteiro.")
     
-    print("\n=== SELECTION SORT OTIMIZADO ===")
-    selection_sort_otimizado(arr)  # Ordena o array usando a versão otimizada
+    # Entrada dos elementos
+    print(f"\nDigite os {n} elementos (separados por espaço):")
+    while True:
+        elementos = input().split()
+        if len(elementos) != n:
+            print(f"Erro: Você deve digitar exatamente {n} elementos!")
+            print("Por favor, digite novamente:")
+            continue
+        
+        try:
+            array = [int(num) for num in elementos]
+            break
+        except ValueError:
+            print("Entrada inválida! Digite apenas números inteiros.")
     
-    fim = time.time()  # Marca o tempo de fim da execução
-    # Calcula e imprime o tempo total de execução
-    print(f"\nTempo de execução: {fim - inicio:.6f} segundos")
+    # Processamento
+    print("\n=== PROCESSO DE ORDENAÇÃO ===")
+    inicio = time.time()
+    array_ordenado = selection_sort_otimizado(array.copy())
+    tempo = time.time() - inicio
+    
+    # Resultados
+    print("\n=== RESULTADOS ===")
+    print("Array original:", array)
+    print("Array ordenado:", array_ordenado)
+    print(f"Tempo de execução: {tempo:.6f} segundos")
 
-if __name__ == "__main__":  # Verifica se este script está sendo executado diretamente
-    main()  # Chama a função principal
+if __name__ == "__main__":
+    main()

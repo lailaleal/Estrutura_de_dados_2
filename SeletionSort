@@ -1,11 +1,12 @@
-import random  # Importa módulo para gerar números aleatórios
+#import random  # Importa módulo para gerar números aleatórios
 import time    # Importa módulo para medir tempo de execução
 
-def gera_array(n):  # Função para gerar array aleatório
-    return [random.randint(0, 100) for _ in range(n)]  # Cria lista com n números entre 0 e 100
+#def gera_array(n):  # Função para gerar array aleatório
+ #   return [random.randint(0, 100) for _ in range(n)]  # Cria lista com n números entre 0 e 100
 
 def selection_sort(array):  # Implementação do Selection Sort
     n = len(array)          # Obtém tamanho do array
+    print("\n=== SELECTION SORT ===")
     print("Array original:", array)  # Mostra array antes da ordenação
     
     for i in range(n):      # Loop externo: percorre cada posição
@@ -20,23 +21,53 @@ def selection_sort(array):  # Implementação do Selection Sort
         if menor != i:
             array[i], array[menor] = array[menor], array[i]  # Troca os elementos
         
-        print(f"Iteração {i}:", array)  # Mostra array após cada iteração
-    
+        print(f"Iteração {i + 1}: {array}")  # Mostra o array após cada iteração
     print("Array ordenado:", array)  # Mostra resultado final
     return array
 
 def main():  # Função principal
-    inicio = time.time()  # Inicia contagem do tempo
+    print("=== SELECTION SORT ===")
     
-    n = 10  # Tamanho do array (pode ser alterado)
-    arr = gera_array(n)  # Gera array aleatório
+    # 1. Solicita o número de elementos
+    while True:
+        try:
+            n = int(input("\nDigite o número de elementos: "))
+            if n <= 0:
+                print("Por favor, digite um número positivo!")
+                continue
+            break
+        except ValueError:
+            print("Entrada inválida! Digite um número inteiro.")
     
-    print("\n=== SELECTION SORT ===")
-    selection_sort(arr)  # Ordena o array
+    # 2. Solicita os elementos do array
+    print(f"\nDigite os {n} elementos (separados por espaço):")
+    while True:
+        elementos = input().split()  # Recebe os elementos como strings
+        
+        # Verifica se a quantidade corresponde ao informado
+        if len(elementos) != n:
+            print(f"Erro: Você deve digitar exatamente {n} elementos!")
+            print("Por favor, digite novamente:")
+            continue
+        
+        # Converte para inteiros
+        try:
+            array = [int(num) for num in elementos]
+            break
+        except ValueError:
+            print("Entrada inválida! Digite apenas números inteiros.")
     
-    fim = time.time()  # Finaliza contagem do tempo
-    # Calcula e mostra tempo de execução
-    print(f"\nTempo de execução: {fim - inicio:.6f} segundos")
+    # 3. Processamento da ordenação
+    print("\n=== PROCESSO DE ORDENAÇÃO ===")
+    inicio = time.time()
+    array_ordenado = selection_sort(array.copy())  # Ordena uma cópia
+    tempo = time.time() - inicio
+    
+    # 4. Exibição dos resultados
+    print("\n=== RESULTADOS ===")
+    print("Array original:", array)
+    print("Array ordenado:", array_ordenado)
+    print(f"Tempo de execução: {tempo:.6f} segundos")
 
-if __name__ == "__main__":  # Verifica se é o programa principal
-    main()  # Executa o programa
+if __name__ == "__main__":
+    main()
